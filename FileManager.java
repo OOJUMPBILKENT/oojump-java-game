@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -11,16 +14,18 @@ public class FileManager {
 	
 	private ArrayList<String[]> highScores;
 	private int[] scores;
+	private FileReader fileReader;
 	
 	private FileManager()
 	{  
 		highScores = new ArrayList<>();
 		loadHighScores();
+		scores = new int[10];
 	}
 	
     public static FileManager getInstance(){
         if(instance == null){
-            instance = new FileManager();
+           instance = new FileManager();
         }
         return instance;
     }
@@ -31,7 +36,7 @@ public class FileManager {
 		System.out.println("here1");
         try {
             // FileReader reads text files in the default encoding.
-            FileReader fileReader = new FileReader("highScores.txt");
+            fileReader = new FileReader("res/file/highScores.txt");
             System.out.println("here2");
             // Always wrap FileReader in BufferedReader.
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -78,8 +83,6 @@ public class FileManager {
 			
 			for (int k = 0; k < arr.size(); k++)
 			{
-				System.out.println(arr.size());
-				System.out.println("aaaaaaaaaaaaaaaa");
 				for(int i= 0; i<arr.size()-1; i++){
 					if(Integer.parseInt(arr.get(i)[1]) < Integer.parseInt(arr.get(i+1)[1])){
 						temp = arr.get(i)[0];
@@ -92,16 +95,14 @@ public class FileManager {
 					}
 				}
 			}
-			for(int i= 0; i<highScores.size(); i++)
-				System.out.println(arr.get(i)[0]);
 		}
 		return arr;
 	}
-/*	public ArrayList<String[]> getHighScores() {
+	
+	public ArrayList<String[]> getHighScores() {
 		return highScores;
 	}
-*/	
-	public int[] getHighScores(){
+	public int[] getScores(){
 		for(int i=0; i<highScores.size(); i++)
 		{
 			scores[i] = Integer.parseInt(highScores.get(i)[1]);
@@ -109,15 +110,44 @@ public class FileManager {
 		return scores;
 	}
 	
+	public void writeToFile(){
+		try {
+
+			File file = new File("res/file/highScores.txt");
+
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			for(int i = 0; i < getInstance().getHighScores().size(); i++)
+			{
+				bw.write(getInstance().getHighScores().get(i)[0] + " " 
+						+ getInstance().getHighScores().get(i)[1] );
+				bw.newLine();
+			}
+			
+			bw.close();
+
+			System.out.println("Done");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public boolean checkScore(int score){
 		boolean isHighScore = false;
-		for(int i = 0; i<getHighScores().length; i++)
+		for(int i = 0; i<getScores().length; i++)
 		{
 			if(highScores.size() < 10)
 				isHighScore = true;
 			else
 			{
-				if(score > getHighScores()[i])
+				if(score > getScores()[i])
 					isHighScore = true;
 			}
 		}

@@ -100,6 +100,7 @@ public class MainMenu extends JPanel implements MouseListener{
 			cardlayout.show(MainFrame.mainPanel, "highScores");
 		}
 		else if( e.getSource() == b3){
+			FileManager.getInstance().writeToFile();
 			System.exit(0);
 		}
 		else if( e.getSource() == b4){

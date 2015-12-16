@@ -19,13 +19,14 @@ private JButton b;
 	private Image highScoreViewImage;
 	
 	private JLabel[] labels;
+	public static JLabel scoreLabel;
 	private FileManager fileMan;
 	private final int TOP_TEN = 10;
 	private final int labelYDiff = 20;
 	//private boolean firstTimeCall = true;
 	
 	
-	public HighScoresView(){
+	public HighScoresView(ArrayList<String[]> highScores){
 		
 		Thread imageThread = new Thread(){
 			public void run(){
@@ -52,9 +53,16 @@ private JButton b;
 		setVisible(true);
 		
 		fileMan = FileManager.getInstance(); 
+		highScores = fileMan.getHighScores();
 		
 		// high score labels
 		labels = new JLabel[TOP_TEN];
+		scoreLabel = new JLabel();
+		//scoreLabel.setText("" + GameManager.score);
+		scoreLabel.setFont(new Font("Verdana" , Font.ITALIC , 30 ));
+		scoreLabel.setBounds(257, 40, 100, 30);
+		scoreLabel.setVisible(false);
+		add(scoreLabel);
 		
 		for(int i=0; i<TOP_TEN; i++)
 		{
@@ -62,9 +70,8 @@ private JButton b;
 			labels[i] = l;
 		}
 		
-	//	updateHighScoresView(fileMan.getHighScores());
-		//fileMan.saveScore("aa", 1500);
-		//updateHighScoresView(fileMan.getHighScores());
+		updateHighScoresView(fileMan.getHighScores());
+
 	}
 	protected void paintComponent( Graphics g){
 		super.paintComponent(g);

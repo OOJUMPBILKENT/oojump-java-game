@@ -11,7 +11,7 @@ public class GameManager implements Runnable{
 	private final boolean GOING_UP = true;
 	private final boolean GOING_DOWN = false;
 	
-	private int score;
+	public static int score;
 	private CollisionManager collMan;
 	private GameMapManager gameMapMan;
 	private GameMap map;
@@ -29,7 +29,7 @@ public class GameManager implements Runnable{
 		gameMapMan.setMap(map);
 		collMan = new CollisionManager();
 		collMan.updateMap(map);
-		score = 0;
+		map.getCharacter();
 		gameOver = false;
 		
 		
@@ -37,6 +37,20 @@ public class GameManager implements Runnable{
 	public void run(){
 		gameLoop();
 	}
+
+/*
+	public void runGameLoop()
+	{
+		Thread loop = new Thread()
+	    {
+	       public void run()
+	       {
+	          gameLoop();
+	       }
+	    };
+	    loop.start();
+	 }
+*/
 	public void gameLoop(){
 		map.getCharacter().setDead(false);
 		map.getCharacter().setJumpCount(0);
@@ -57,6 +71,7 @@ public class GameManager implements Runnable{
 						map.getCharacter().incrementJumpCount();
 					}
 					else if(map.getCharacter().getJumpCount() >= map.getCharacter().getMaxJumpCounter()){
+						//SoundManager.trampolineHit
 						map.getCharacter().setBoosted(false);
 						//map.setCharToNormal();
 						map.getCharacter().setVy(5);
@@ -91,29 +106,25 @@ public class GameManager implements Runnable{
 			}
 			else if( map.getCharacter().getBonus().getName() == Shield.SHIELD_NAME){
 				map.getCharacter().setProtected(true);
-				System.out.println( "SHIELD 2");
 			}
 			else if( map.getCharacter().getBonus().getName() == Jetpack.JETPACK_NAME){
 				map.getCharacter().setMaxJumpCounter(((Jetpack)map.getCharacter().getBonus()).getMaxJumpCount());
 				map.getCharacter().setVy( ((Jetpack)map.getCharacter().getBonus()).getMoveHeight());
 				map.getCharacter().setBoosted(true);
-				System.out.println( "JETPACK 2");
 			}
 			else if( map.getCharacter().getBonus().getName() == Propeller.PROPELLER_NAME){
 				map.getCharacter().setMaxJumpCounter(((Propeller)map.getCharacter().getBonus()).getMaxJumpCount());
 				map.getCharacter().setVy( ((Propeller)map.getCharacter().getBonus()).getMoveHeight());
 				map.getCharacter().setBoosted(true);
-				System.out.println( "PROPELLER 2");
 			}
 			else if( map.getCharacter().getBonus().getName() == Trampoline.TRAMPOLINE_NAME){
 				map.getCharacter().setMaxJumpCounter(((Trampoline)map.getCharacter().getBonus()).getMaxJumpCount());
 				map.getCharacter().setBoosted(false);
-				System.out.println( "TRAMPOLINE 2");
 				map.getCharacter().setJumpCount(0);
 				map.getCharacter().setBonus(null);
+				SoundManager.trampolineHit.start();
 			}
 			else if( map.getCharacter().getBonus().getName() == Spring.SPRING_NAME){
-				System.out.println( "SPRING 2");
 				map.getCharacter().setMaxJumpCounter(((Spring)map.getCharacter().getBonus()).getMaxJumpCount());
 				map.getCharacter().setBoosted(false);
 				map.getCharacter().setJumpCount(0);
@@ -121,7 +132,6 @@ public class GameManager implements Runnable{
 			}
 		}
 		else if( gameObject != null && !map.getCharacter().isBoosted()){
-			System.out.println( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@q" + gameObject.getName());
 			if( gameObject.getName() == Monster.MONSTER_NAME){
 				if( !map.getCharacter().isBoosted()){    //!map.getCharacter().isProtected() || !map.getCharacter().isBoosted()){
 					map.getCharacter().setDead(true);
@@ -138,41 +148,36 @@ public class GameManager implements Runnable{
 				if( gameObject.getName() == BrokenBrick.BROKEN_BRICK_NAME){
 					((Brick)gameObject).setRemove(true);
 				}
-				System.out.println( "jump count 0");
 			}
 		}
 	}
-
 	public void updateHighScores(){	
 		if(FileManager.getInstance().checkScore(score))
 		{
-			JTextField askName = new JTextField();
-			MainFrame.highScores.add(askName);
-			FileManager.getInstance().saveScore(askName.getText(), score);
+			CardLayout cardLayout = (CardLayout) MainFrame.mainPanel.getLayout();
+			cardLayout.show(MainFrame.mainPanel, "gameOver");
+			//MainFrame.gameOverView.askName.setVisible(true);
+			//FileManager.getInstance().saveScore(MainFrame.gameOverView.askName.getText(), score);
+		}
+		else
+		{
+			CardLayout cardLayout = (CardLayout) MainFrame.mainPanel.getLayout();
+			cardLayout.show(MainFrame.mainPanel, "highScores");
 		}
 			
 	}
 	public void endGame(){
 		score = map.getCharacter().getScore();
-		System.out.println( "endgame:" + score);
+		System.out.println( "endgame:" + score);			//@@@@@@@@@@@@@@@@@@@@@@@SCORE
 		map.getCharacter().setDead(true);
 		gameOver = true;
 		timer.stop();
-		
-		setToInitial();
-		CardLayout cardLayout = (CardLayout) MainFrame.mainPanel.getLayout();
-		cardLayout.show(MainFrame.mainPanel, "highScores");
-		
-		//MainFrame.mainMenu.requestFocus();
-		//MainFrame.mainMenu.revalidate();
+		updateHighScores();
+		setToInitial();	
 	}
 	public void setToInitial(){
-		map = new GameMap();
-		gameMapMan = new GameMapManager();
-		gameMapMan.setMap(map);
-		collMan = new CollisionManager();
-		collMan.updateMap(map);
-		score = 0;
+		map.initializeObjects();
+		map.getCharacter().setScore();
 		gameOver = false;
 	}
 	public boolean isGameOver(){
@@ -249,48 +254,3 @@ public class GameManager implements Runnable{
 	     }
 	}
 }
-/*public class InputHandler extends KeyAdapter {
-
-@Override
-public void keyPressed(KeyEvent e) {
-	
-	// TODO Auto-generated method stub
-	if( e.getKeyCode() == KeyEvent.VK_RIGHT){
-    	 character.setPosX(character.getPosX()+horizantalMove);
-    	 character.setImage(characterRightImage);
-    	 if( character.getPosX()+characterImageDiff > WIDTH){
-    		 character.setPosX(-characterImageDiff);
-    	 }
-    	 character.setDirection(Character.MoveDirection.RIGHT);
-     }
-     if( e.getKeyCode() == KeyEvent.VK_LEFT){
-    	 character.setPosX(character.getPosX()-horizantalMove);
-    	 character.setImage(characterLeftImage);
-    	 if( character.getPosX()+ widthcharacter-characterImageDiff <= 0){
-    		 character.setPosX(WIDTH-characterImageDiff);
-    	 }
-    	 character.setDirection(Character.MoveDirection.LEFT);
-     }
-}
-
-@Override
-public void keyReleased(KeyEvent e) {
-	if( e.getKeyCode() == KeyEvent.VK_RIGHT){
-    	 character.setPosX(character.getPosX()+horizantalMove);
-    	 character.setImage(characterRightImage);
-    	 if( character.getPosX()+characterImageDiff > WIDTH){
-    		 character.setPosX(-characterImageDiff);
-    	 }
-    	 character.setDirection(Character.MoveDirection.RIGHT);
-     }
-     if( e.getKeyCode() == KeyEvent.VK_LEFT){
-    	 character.setPosX(character.getPosX()-horizantalMove);
-    	 character.setImage(characterLeftImage);
-    	 if( character.getPosX()+ widthcharacter-characterImageDiff <= 0){
-    		 character.setPosX(WIDTH-characterImageDiff);
-    	 }
-    	 character.setDirection(Character.MoveDirection.LEFT);
-     }
-}
-}
-*/

@@ -4,6 +4,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class MainFrame extends JFrame implements KeyListener{
 
@@ -11,7 +12,7 @@ public class MainFrame extends JFrame implements KeyListener{
 	private MainMenu mainMenu;
 	private HelpView helpMenu;
 	public static HighScoresView highScores;
-	
+	public static GameOverView gameOverView;
 	public static JPanel mainPanel;
 	
 	public MainFrame(){
@@ -24,13 +25,16 @@ public class MainFrame extends JFrame implements KeyListener{
 		manager = new GameManager();
 	
 		helpMenu = new HelpView();
-		highScores = new HighScoresView();
+		highScores = new HighScoresView(FileManager.getInstance().getHighScores());
 		mainMenu = new MainMenu();
+		gameOverView = new GameOverView();
+		
 		
 		mainPanel.add(manager.getGameMapManager(), "manager");
 		mainPanel.add(highScores, "highScores");
 		mainPanel.add(helpMenu, "helpMenu");
 		mainPanel.add(mainMenu, "mainMenu");
+		mainPanel.add(gameOverView, "gameOver");
 		mainPanel.addKeyListener(this);
 		getContentPane().add(mainPanel);
 		
