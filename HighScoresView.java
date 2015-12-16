@@ -10,12 +10,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import java.awt.CardLayout;
 import java.awt.Font;
 
-public class HighScoresView extends JFrame implements MouseListener{
+public class HighScoresView extends JPanel implements MouseListener{
 private JButton b;
 	
-	private Image highScoreViewImage = Toolkit.getDefaultToolkit().getImage("high_scores.png");
+	private Image highScoreViewImage;
 	
 	private JPanel highScorePanel;
 	private JLabel[] labels;
@@ -26,35 +28,28 @@ private JButton b;
 	
 	
 	public HighScoresView(){
+		
+		Thread imageThread = new Thread(){
+			public void run(){
+				highScoreViewImage = Toolkit.getDefaultToolkit().getImage("high_scores.png");
+			
+			}
+		};
+		imageThread.run();
 		this.setName("High Scores");
 
 		setSize(520, 815);
-		setResizable(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		b = new JButton(); // back button for helpView
 		b.setBounds(350, 635, 130, 45);
 		
-		highScorePanel = new JPanel(){
-			protected void paintComponent( Graphics g){
-				super.paintComponent(g);
-				g.drawImage(highScoreViewImage, 0, 0, null);
-				repaint();
-			
-			}
-		};
-		
-		highScorePanel.setLayout(null);
+		setLayout(null);
 		
 		b.setOpaque(false);
 		b.setContentAreaFilled(false);
 		b.setBorderPainted(false);
 		b.addMouseListener(this);
-		highScorePanel.add(b);
-		add(highScorePanel);
-		highScorePanel.setVisible(true);
-			
-		add(highScorePanel);
+		add(b);
 		
 		setVisible(true);
 		
@@ -73,6 +68,12 @@ private JButton b;
 		//fileMan.saveScore("aa", 1500);
 		updateHighScoresView(fileMan.getHighScores());
 	}
+	protected void paintComponent( Graphics g){
+		super.paintComponent(g);
+		g.drawImage(highScoreViewImage, 0, 0, null);
+		repaint();
+	
+	}
 	public void updateHighScoresView(ArrayList<String[]> highScores){
 	
 		if(highScores.size()!=0){
@@ -83,7 +84,7 @@ private JButton b;
 				labels[i].setBounds(100, 200+(labelYDiff*i), 300, 50);
 				labels[i].setFont(new Font("Verdana" , Font.ITALIC , 18 ));
 				add(labels[i]);
-				highScorePanel.add(labels[i]);
+				add(labels[i]);
 				labels[i].setVisible(true);
 			}
 		}
@@ -92,12 +93,10 @@ private JButton b;
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource() == b)
-		{
-			setVisible(false);
-			MainMenu mainMenu = new MainMenu();
-			mainMenu.setVisible(true);
-		}	
+		if( e.getSource() == b){
+			CardLayout cardLayout = (CardLayout)MainFrame.mainPanel.getLayout();
+			cardLayout.show(MainFrame.mainPanel, "mainMenu");
+		}
 	}
 
 	@Override

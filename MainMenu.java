@@ -1,3 +1,4 @@
+import java.awt.CardLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -17,7 +18,6 @@ public class MainMenu extends JPanel implements MouseListener{
 	private ArrayList<JButton> buttons = new ArrayList<>();
 	
 	private boolean mute = false;
-	private int panelIndex = -1;
 	
 	private Image mainMenuImage = Toolkit.getDefaultToolkit().getImage("main_menu.png");
 	//private Image helpViewImage = Toolkit.getDefaultToolkit().getImage("help_view.png");
@@ -47,7 +47,6 @@ public class MainMenu extends JPanel implements MouseListener{
 		buttons.add(b2);
 		buttons.add(b3);
 		buttons.add(b4);
-		
 		setLayout(null);
 		for( JButton b : buttons){
 			b.setOpaque(false);
@@ -56,6 +55,7 @@ public class MainMenu extends JPanel implements MouseListener{
 			b.addMouseListener(this);
 			add(b);
 		}
+		addMouseListener(this);
 	}
 	protected void paintComponent( Graphics g){
 		super.paintComponent(g);
@@ -74,28 +74,34 @@ public class MainMenu extends JPanel implements MouseListener{
 			b.setEnabled(false);
 		}
 	}
-	public int getPanelIndex(){
-		return panelIndex;
-	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
-		if( e.getSource() == b0){
+		System.out.println( e.getSource());
+		System.out.println( b0);
+		if( e.getSource() == buttons.get(0)){
 			System.out.println( "pressed");
-			panelIndex = 0;
+			CardLayout cardLayout = (CardLayout) MainFrame.mainPanel.getLayout();
+			cardLayout.addLayoutComponent(MainFrame.manager.getGameMapManager(), "manager");
+			cardLayout.show(MainFrame.mainPanel, "manager");
+			MainFrame.manager.run();
+			MainFrame.mainPanel.requestFocus();
+			MainFrame.mainPanel.revalidate();
+			//MainFrame.manager.getGameMapManager().requestFocus();
+			//MainFrame.manager.getGameMapManager().revalidate();
+			
+			
 			
 		}
-		else if( e.getSource() == b1){
-			setVisible(false);
-			HelpView helpView = new HelpView();
-			helpView.setVisible(true);
+		else if( e.getSource() == buttons.get(1)){
+			CardLayout cardlayout = (CardLayout)MainFrame.mainPanel.getLayout();
+			cardlayout.show(MainFrame.mainPanel, "helpMenu");
 		}
 		else if( e.getSource() == b2){
-			setVisible(false);
-			HighScoresView highScoresView = new HighScoresView();
-			highScoresView.setVisible(true);
+			CardLayout cardlayout = (CardLayout)MainFrame.mainPanel.getLayout();
+			cardlayout.show(MainFrame.mainPanel, "highScores");
 		}
 		else if( e.getSource() == b3){
 			System.exit(0);
@@ -134,4 +140,5 @@ public class MainMenu extends JPanel implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
 }

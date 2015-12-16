@@ -1,3 +1,4 @@
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -29,6 +30,29 @@ public class GameManager implements Runnable{
 		collMan.updateMap(map);
 		score = 0;
 		gameOver = false;
+		
+		
+	}
+	public void run(){
+		gameLoop();
+	}
+
+/*
+	public void runGameLoop()
+	{
+		Thread loop = new Thread()
+	    {
+	       public void run()
+	       {
+	          gameLoop();
+	       }
+	    };
+	    loop.start();
+	 }
+*/
+	public void gameLoop(){
+		map.getCharacter().setDead(false);
+		map.getCharacter().setJumpCount(0);
 		
 		timerAction = new ActionListener(){
 			@Override
@@ -63,27 +87,6 @@ public class GameManager implements Runnable{
 		};
 		timer = new Timer(40, timerAction);
 		timer.setRepeats(true);
-	}
-	public void run(){
-		gameLoop();
-	}
-/*
-	public void runGameLoop()
-	{
-		Thread loop = new Thread()
-	    {
-	       public void run()
-	       {
-	          gameLoop();
-	       }
-	    };
-	    loop.start();
-	 }
-*/
-	public void gameLoop(){
-		map.getCharacter().setDead(false);
-		map.getCharacter().setJumpCount(0);
-		
 		timer.start();
 	}
 	
@@ -162,9 +165,23 @@ public class GameManager implements Runnable{
 		score = map.getCharacter().getScore();
 		System.out.println( "endgame:" + score);
 		map.getCharacter().setDead(true);
-		timer.stop();
 		gameOver = true;
-		new MainMenu();
+		timer.stop();
+		setToInitial();
+		CardLayout cardLayout = (CardLayout) MainFrame.mainPanel.getLayout();
+		cardLayout.show(MainFrame.mainPanel, "highScores");
+		
+		//MainFrame.mainMenu.requestFocus();
+		//MainFrame.mainMenu.revalidate();
+	}
+	public void setToInitial(){
+		map = new GameMap();
+		gameMapMan = new GameMapManager();
+		gameMapMan.setMap(map);
+		collMan = new CollisionManager();
+		collMan.updateMap(map);
+		score = 0;
+		gameOver = false;
 	}
 	public boolean isGameOver(){
 		return gameOver;

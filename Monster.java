@@ -2,8 +2,8 @@ import java.awt.Image;
 
 public class Monster extends GameObject implements Observer{
 
-	private final static int width = 140;
-	private final static int height = 89;
+	private final static int width = 80;
+	private final static int height = 60;
 	
 	public static String MONSTER_NAME = "MONSTER";
 	
