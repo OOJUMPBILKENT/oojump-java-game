@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class HelpView extends JPanel implements MouseListener{
@@ -16,12 +15,10 @@ public class HelpView extends JPanel implements MouseListener{
 	
 	private Image helpViewImage;
 	
-	private JPanel helpPanel;
-	
 	public HelpView(){
 		Thread imageThread = new Thread(){
 			public void run(){
-				helpViewImage = Toolkit.getDefaultToolkit().getImage("help_view.png");
+				helpViewImage = Toolkit.getDefaultToolkit().getImage("res/images/help_view.png");
 			}
 		};
 		imageThread.run();

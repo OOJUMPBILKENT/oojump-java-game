@@ -44,23 +44,23 @@ public class GameMap {
 		
 		Thread imageThread = new Thread(){
 			public void run(){
-				doodleRightImage = Toolkit.getDefaultToolkit().getImage("doodle_right.png");
-				doodleLeftImage = Toolkit.getDefaultToolkit().getImage("doodle_left.png");
-				doodleJetpackLeftImage = Toolkit.getDefaultToolkit().getImage("doodle_jetpack_left.png");
-				doodleJetpackRightImage = Toolkit.getDefaultToolkit().getImage("doodle_jetpack_right.png");
-				doodlePropellerLeftImage = Toolkit.getDefaultToolkit().getImage("doodle_propeller_left.png");
-				doodlePropellerRightImage = Toolkit.getDefaultToolkit().getImage("doodle_propeller_right.png");
-				backgroundImage = Toolkit.getDefaultToolkit().getImage("background.png");
-				greenBrickImage = Toolkit.getDefaultToolkit().getImage("green_platform.png");
-				monsterImage = Toolkit.getDefaultToolkit().getImage("big_blue_monster.png");
-				springBrickImage = Toolkit.getDefaultToolkit().getImage("spring_platform.png");
-				trampolineBrickImage = Toolkit.getDefaultToolkit().getImage("trampoline_platform.png");
-				propellerImage = Toolkit.getDefaultToolkit().getImage("propeller.png");
-				jetpackImage = Toolkit.getDefaultToolkit().getImage("jetpack.png");
-				topbarImage = Toolkit.getDefaultToolkit().getImage("topbar.png");
-				movingBrickImage = Toolkit.getDefaultToolkit().getImage("blue_platform.png");
-				brokenBrickImage = Toolkit.getDefaultToolkit().getImage("broken_brick.png");
-				coinImage = Toolkit.getDefaultToolkit().getImage("coin.png");
+				doodleRightImage = Toolkit.getDefaultToolkit().getImage("res/images/doodle_right.png");
+				doodleLeftImage = Toolkit.getDefaultToolkit().getImage("res/images/doodle_left.png");
+				doodleJetpackLeftImage = Toolkit.getDefaultToolkit().getImage("res/images/doodle_jetpack_left.png");
+				doodleJetpackRightImage = Toolkit.getDefaultToolkit().getImage("res/images/doodle_jetpack_right.png");
+				doodlePropellerLeftImage = Toolkit.getDefaultToolkit().getImage("res/images/doodle_propeller_left.png");
+				doodlePropellerRightImage = Toolkit.getDefaultToolkit().getImage("res/images/doodle_propeller_right.png");
+				backgroundImage = Toolkit.getDefaultToolkit().getImage("res/images/background.png");
+				greenBrickImage = Toolkit.getDefaultToolkit().getImage("res/images/green_platform.png");
+				monsterImage = Toolkit.getDefaultToolkit().getImage("res/images/big_blue_monster.png");
+				springBrickImage = Toolkit.getDefaultToolkit().getImage("res/images/spring_platform.png");
+				trampolineBrickImage = Toolkit.getDefaultToolkit().getImage("res/images/trampoline_platform.png");
+				propellerImage = Toolkit.getDefaultToolkit().getImage("res/images/propeller.png");
+				jetpackImage = Toolkit.getDefaultToolkit().getImage("res/images/jetpack.png");
+				topbarImage = Toolkit.getDefaultToolkit().getImage("res/images/topbar.png");
+				movingBrickImage = Toolkit.getDefaultToolkit().getImage("res/images/blue_platform.png");
+				brokenBrickImage = Toolkit.getDefaultToolkit().getImage("res/images/broken_brick.png");
+				coinImage = Toolkit.getDefaultToolkit().getImage("res/images/coin.png");
 			}
 		};
 		imageThread.run();
@@ -83,7 +83,11 @@ public class GameMap {
 	
 	
 	}
-	private void initializeObjects(){
+	public void initializeObjects(){
+		character = null;
+		monsters = new ArrayList<Monster>();
+		bonuses = new ArrayList<Bonus>();
+		bricks = new ArrayList<Brick>();
 		
 		int charStartPosX = 200;
 		int charStartPosY = 650;

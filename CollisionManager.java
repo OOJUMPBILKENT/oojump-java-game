@@ -27,11 +27,9 @@ public class CollisionManager {
 			if( goingUp){
 				if( !character.isBoosted()){
 					if( bonus != null){
-						System.out.println( "1 BONUS " + bonus.getName());
 						return bonus;
 					}
 					else if( monster != null){
-						System.out.println( "1 MONSTER" + monster.getName());
 						return monster;
 					}
 					
@@ -40,23 +38,18 @@ public class CollisionManager {
 			else{
 				if( !character.isBoosted()){
 					if( bonus != null){
-						System.out.println("2 BONUS" +  bonus.getName());
 						return bonus;
 					}
 					else if( monster != null){
-						System.out.println( "2 MONSTER" +monster.getName());
 						return monster;
 					}
 					else if( brick != null){
-						System.out.println("2 BRICK" + brick.getName());
 						return brick;
 					}
 				}
-				System.out.println( "RETRU N BRICK");
 				return brick;
 			}
 		}
-		System.out.println( "RETURN NULL");
 		return null;
 	}
 	public Monster collideMonster(){
@@ -69,7 +62,6 @@ public class CollisionManager {
 					){
 				
 				map.getCharacter().setDead(true);
-				System.out.println( "dead");
 				return monster;
 				
 			}
@@ -90,18 +82,16 @@ public class CollisionManager {
 					b.setRemove(true);
 					map.getCharacter().setBoosted(true);
 					
-					System.out.println( "jetpack");
 				}
 				else if( b.getName() == Propeller.PROPELLER_NAME){
 					map.getCharacter().setBonus(b);
 					b.setRemove(true);
 					map.getCharacter().setBoosted(true);
-					System.out.println( "propeller");
+					
 				}
 				else if( b.getName() == Coin.COIN_NAME){
 					map.getCharacter().setBonus(b);
 					b.setRemove(true);
-					System.out.println( "Coint aldrýdm");
 				}
 				return b;
 			}
@@ -122,7 +112,6 @@ public class CollisionManager {
 							
 							if( character.getPosX() + character.getWidth() >= b.getPosX() + ((StandardBrick)b).getStringStartPosX() && character.getPosX() <= b.getPosX() + ((StandardBrick)b).getStringEndPosX()){
 								map.getCharacter().setBonus(new Spring(null));
-									System.out.println( "spring");
 									
 							}
 							return b;
@@ -139,7 +128,6 @@ public class CollisionManager {
 							if( character.getPosX() + character.getWidth() >= b.getPosX() + ((StandardBrick) b).getTrampolineStartPosX() 
 											&& character.getPosX() <= b.getPosX() + ((StandardBrick) b).getTrampolineEndPosX()){
 								map.getCharacter().setBonus(new Trampoline(null));
-								System.out.println( "trampoline");
 								
 							}
 							return b;

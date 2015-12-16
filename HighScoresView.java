@@ -7,7 +7,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -19,7 +18,6 @@ private JButton b;
 	
 	private Image highScoreViewImage;
 	
-	private JPanel highScorePanel;
 	private JLabel[] labels;
 	private FileManager fileMan;
 	private final int TOP_TEN = 10;
@@ -31,7 +29,7 @@ private JButton b;
 		
 		Thread imageThread = new Thread(){
 			public void run(){
-				highScoreViewImage = Toolkit.getDefaultToolkit().getImage("high_scores.png");
+				highScoreViewImage = Toolkit.getDefaultToolkit().getImage("res/images/high_scores.png");
 			
 			}
 		};

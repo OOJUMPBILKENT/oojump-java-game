@@ -2,14 +2,11 @@ import java.awt.CardLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class MainMenu extends JPanel implements MouseListener{
@@ -19,10 +16,10 @@ public class MainMenu extends JPanel implements MouseListener{
 	
 	private boolean mute = false;
 	
-	private Image mainMenuImage = Toolkit.getDefaultToolkit().getImage("main_menu.png");
+	private Image mainMenuImage = Toolkit.getDefaultToolkit().getImage("res/images/main_menu.png");
 	//private Image helpViewImage = Toolkit.getDefaultToolkit().getImage("help_view.png");
-	private Image soundOnImage = Toolkit.getDefaultToolkit().getImage("sound_on.png");
-	private Image soundOffImage = Toolkit.getDefaultToolkit().getImage("sound_off.png");
+	private Image soundOnImage = Toolkit.getDefaultToolkit().getImage("res/images/sound_on.png");
+	private Image soundOffImage = Toolkit.getDefaultToolkit().getImage("res/images/sound_off.png");
 	
 	public MainMenu(){
 		this.setName("OOOOOOOO JUMP");
@@ -79,18 +76,17 @@ public class MainMenu extends JPanel implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
-		System.out.println( e.getSource());
-		System.out.println( b0);
 		if( e.getSource() == buttons.get(0)){
-			System.out.println( "pressed");
+			
+			//MainFrame.manager.setToInitial();
+		
 			CardLayout cardLayout = (CardLayout) MainFrame.mainPanel.getLayout();
 			cardLayout.addLayoutComponent(MainFrame.manager.getGameMapManager(), "manager");
 			cardLayout.show(MainFrame.mainPanel, "manager");
+			
 			MainFrame.manager.run();
 			MainFrame.mainPanel.requestFocus();
 			MainFrame.mainPanel.revalidate();
-			//MainFrame.manager.getGameMapManager().requestFocus();
-			//MainFrame.manager.getGameMapManager().revalidate();
 			
 			
 			

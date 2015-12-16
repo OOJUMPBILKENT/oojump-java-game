@@ -10,6 +10,7 @@ public class FileManager {
 	private static FileManager instance;
 	
 	private ArrayList<String[]> highScores;
+	private FileReader fileReader;
 	
 	private FileManager()
 	{  
@@ -19,7 +20,7 @@ public class FileManager {
 	
     public static FileManager getInstance(){
         if(instance == null){
-            instance = new FileManager();
+           instance = new FileManager();
         }
         return instance;
     }
@@ -30,7 +31,7 @@ public class FileManager {
 		System.out.println("here1");
         try {
             // FileReader reads text files in the default encoding.
-            FileReader fileReader = new FileReader("highScores.txt");
+            fileReader = new FileReader("res/file/highScores.txt");
             System.out.println("here2");
             // Always wrap FileReader in BufferedReader.
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -77,8 +78,6 @@ public class FileManager {
 			
 			for (int k = 0; k < arr.size(); k++)
 			{
-				System.out.println(arr.size());
-				System.out.println("aaaaaaaaaaaaaaaa");
 				for(int i= 0; i<arr.size()-1; i++){
 					if(Integer.parseInt(arr.get(i)[1]) < Integer.parseInt(arr.get(i+1)[1])){
 						temp = arr.get(i)[0];
@@ -91,8 +90,6 @@ public class FileManager {
 					}
 				}
 			}
-			for(int i= 0; i<highScores.size(); i++)
-				System.out.println(arr.get(i)[0]);
 		}
 		return arr;
 	}
