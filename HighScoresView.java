@@ -62,9 +62,9 @@ private JButton b;
 			labels[i] = l;
 		}
 		
-		updateHighScoresView(fileMan.getHighScores());
+	//	updateHighScoresView(fileMan.getHighScores());
 		//fileMan.saveScore("aa", 1500);
-		updateHighScoresView(fileMan.getHighScores());
+		//updateHighScoresView(fileMan.getHighScores());
 	}
 	protected void paintComponent( Graphics g){
 		super.paintComponent(g);

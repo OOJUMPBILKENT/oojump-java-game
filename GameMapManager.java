@@ -1,13 +1,18 @@
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
 public class GameMapManager extends JPanel implements Drawable{ //extends JPanel{
 	
 	private GameMap map;
-	//Constructor
 	
+	private JLabel scoreLabel;
+	
+	//Constructor
 	public GameMapManager(){
 		
 		setSize(WIDTH, HEIGHT);
@@ -15,6 +20,7 @@ public class GameMapManager extends JPanel implements Drawable{ //extends JPanel
 		requestFocus();
 		requestFocusInWindow();
 		setVisible(true);
+		scoreLabel = new JLabel();
 		
 		//map = new GameMap();
 	}
@@ -51,6 +57,10 @@ public class GameMapManager extends JPanel implements Drawable{ //extends JPanel
 		
 		map.getCharacter().draw(g);
 		g.drawImage(map.getTopBarImage(), 0, 0, null);
+		scoreLabel.setText("" + map.getCharacter().getScore());
+		scoreLabel.setBounds(0, 0, 100, 50);
+		scoreLabel.setFont(new Font("Verdana" , Font.ITALIC , 30));
+		add(scoreLabel);
 	}
 	public void setMap( GameMap map){
 		this.map = map;

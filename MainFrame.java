@@ -10,7 +10,7 @@ public class MainFrame extends JFrame implements KeyListener{
 	public static GameManager manager;
 	private MainMenu mainMenu;
 	private HelpView helpMenu;
-	private HighScoresView highScores;
+	public static HighScoresView highScores;
 	
 	public static JPanel mainPanel;
 	

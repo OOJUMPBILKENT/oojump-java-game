@@ -12,7 +12,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 //Other classes can reach this class by using SoundManager.getInstance()
 public class SoundManager {
 	private static SoundManager instance;
-	private Clip trampolineHit;
+	public static Clip trampolineHit;
 	
 	
 	private SoundManager()

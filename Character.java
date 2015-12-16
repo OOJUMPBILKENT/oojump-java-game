@@ -35,6 +35,9 @@ public class Character extends GameObject implements Subject{
 	public int getScore(){
 		return score;
 	}
+	public void setScore(){
+		score = 0;
+	}
 	public void updateScore(){
 		score+= sprite.getVy();
 	}

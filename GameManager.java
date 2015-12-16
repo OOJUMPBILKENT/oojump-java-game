@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JTextField;
 import javax.swing.Timer;
 
 public class GameManager implements Runnable{
@@ -36,20 +37,6 @@ public class GameManager implements Runnable{
 	public void run(){
 		gameLoop();
 	}
-
-/*
-	public void runGameLoop()
-	{
-		Thread loop = new Thread()
-	    {
-	       public void run()
-	       {
-	          gameLoop();
-	       }
-	    };
-	    loop.start();
-	 }
-*/
 	public void gameLoop(){
 		map.getCharacter().setDead(false);
 		map.getCharacter().setJumpCount(0);
@@ -104,24 +91,29 @@ public class GameManager implements Runnable{
 			}
 			else if( map.getCharacter().getBonus().getName() == Shield.SHIELD_NAME){
 				map.getCharacter().setProtected(true);
+				System.out.println( "SHIELD 2");
 			}
 			else if( map.getCharacter().getBonus().getName() == Jetpack.JETPACK_NAME){
 				map.getCharacter().setMaxJumpCounter(((Jetpack)map.getCharacter().getBonus()).getMaxJumpCount());
 				map.getCharacter().setVy( ((Jetpack)map.getCharacter().getBonus()).getMoveHeight());
 				map.getCharacter().setBoosted(true);
+				System.out.println( "JETPACK 2");
 			}
 			else if( map.getCharacter().getBonus().getName() == Propeller.PROPELLER_NAME){
 				map.getCharacter().setMaxJumpCounter(((Propeller)map.getCharacter().getBonus()).getMaxJumpCount());
 				map.getCharacter().setVy( ((Propeller)map.getCharacter().getBonus()).getMoveHeight());
 				map.getCharacter().setBoosted(true);
+				System.out.println( "PROPELLER 2");
 			}
 			else if( map.getCharacter().getBonus().getName() == Trampoline.TRAMPOLINE_NAME){
 				map.getCharacter().setMaxJumpCounter(((Trampoline)map.getCharacter().getBonus()).getMaxJumpCount());
 				map.getCharacter().setBoosted(false);
+				System.out.println( "TRAMPOLINE 2");
 				map.getCharacter().setJumpCount(0);
 				map.getCharacter().setBonus(null);
 			}
 			else if( map.getCharacter().getBonus().getName() == Spring.SPRING_NAME){
+				System.out.println( "SPRING 2");
 				map.getCharacter().setMaxJumpCounter(((Spring)map.getCharacter().getBonus()).getMaxJumpCount());
 				map.getCharacter().setBoosted(false);
 				map.getCharacter().setJumpCount(0);
@@ -129,6 +121,7 @@ public class GameManager implements Runnable{
 			}
 		}
 		else if( gameObject != null && !map.getCharacter().isBoosted()){
+			System.out.println( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@q" + gameObject.getName());
 			if( gameObject.getName() == Monster.MONSTER_NAME){
 				if( !map.getCharacter().isBoosted()){    //!map.getCharacter().isProtected() || !map.getCharacter().isBoosted()){
 					map.getCharacter().setDead(true);
@@ -145,28 +138,40 @@ public class GameManager implements Runnable{
 				if( gameObject.getName() == BrokenBrick.BROKEN_BRICK_NAME){
 					((Brick)gameObject).setRemove(true);
 				}
+				System.out.println( "jump count 0");
 			}
 		}
 	}
-	public boolean isHighScore(){
-		return false;
-	}
-	public void updateHighScores(){
-		
+
+	public void updateHighScores(){	
+		if(FileManager.getInstance().checkScore(score))
+		{
+			JTextField askName = new JTextField();
+			MainFrame.highScores.add(askName);
+			FileManager.getInstance().saveScore(askName.getText(), score);
+		}
+			
 	}
 	public void endGame(){
 		score = map.getCharacter().getScore();
-		System.out.println( "endgame:" + score);			//@@@@@@@@@@@@@@@@@@@@@@@SCORE
+		System.out.println( "endgame:" + score);
 		map.getCharacter().setDead(true);
 		gameOver = true;
 		timer.stop();
+		
 		setToInitial();
 		CardLayout cardLayout = (CardLayout) MainFrame.mainPanel.getLayout();
 		cardLayout.show(MainFrame.mainPanel, "highScores");
 		
+		//MainFrame.mainMenu.requestFocus();
+		//MainFrame.mainMenu.revalidate();
 	}
 	public void setToInitial(){
-		map.initializeObjects();
+		map = new GameMap();
+		gameMapMan = new GameMapManager();
+		gameMapMan.setMap(map);
+		collMan = new CollisionManager();
+		collMan.updateMap(map);
 		score = 0;
 		gameOver = false;
 	}
