@@ -33,6 +33,7 @@ public class GameMap {
 	private final static int WIDTH = 520;
 	private final static int HEIGHT = 815;
 	private int posYDiff;
+	private int levelDecider;
 	private final int monsterHeightDiff = 90;
 	private final int monsterWidthDiff = 20;
 	
@@ -52,7 +53,7 @@ public class GameMap {
 				doodlePropellerRightImage = Toolkit.getDefaultToolkit().getImage("res/images/doodle_propeller_right.png");
 				backgroundImage = Toolkit.getDefaultToolkit().getImage("res/images/background.png");
 				greenBrickImage = Toolkit.getDefaultToolkit().getImage("res/images/green_platform.png");
-				monsterImage = Toolkit.getDefaultToolkit().getImage("res/images/big_blue_monster.png");
+				monsterImage = Toolkit.getDefaultToolkit().getImage("res/images/monster.png");
 				springBrickImage = Toolkit.getDefaultToolkit().getImage("res/images/spring_platform.png");
 				trampolineBrickImage = Toolkit.getDefaultToolkit().getImage("res/images/trampoline_platform.png");
 				propellerImage = Toolkit.getDefaultToolkit().getImage("res/images/propeller.png");
@@ -76,12 +77,10 @@ public class GameMap {
 		//bonuses = new ArrayList<Bonus>();
 		//monsters = new ArrayList<Monster>();
 		
-		posYDiff = 80;
+		
 		rand = new Random();
 		
 		initializeObjects();
-	
-	
 	}
 	public void initializeObjects(){
 		character = null;
@@ -98,6 +97,8 @@ public class GameMap {
 		int coinChooser = 115;
 		int trampolineChooser = 95;
 		int springChooser = 90;
+		posYDiff = 80;
+		levelDecider = 0;
 		
 		character = new Character(doodleRightImage);
 		character.setPos(charStartPosX, charStartPosY);
@@ -160,9 +161,10 @@ public class GameMap {
 				monsterBrick = 10 + rand.nextInt(5);
 		}
 		Monster monster = new Monster(monsterImage);
-		monster.setPos(bricks.get(monsterBrick).getPosX()- monsterWidthDiff, bricks.get(monsterBrick).getPosY()-monsterHeightDiff);
+		monster.setPos(bricks.get(monsterBrick).getPosX(), bricks.get(monsterBrick).getPosY()- monsterHeightDiff*2/3);
 		bricks.get(monsterBrick).setEmpty(false);
 		monsters.add(monster);
+		System.out.println(" initial monster added");
 	
 	}
 	public int determinePosX( int i){
@@ -201,6 +203,18 @@ public class GameMap {
 		int bonusChooser = 100;
 		int jetpackChooser = 5;
 		int propellerChooser = 95;
+		
+		if( levelDecider < 5){
+			levelDecider++;
+		}
+		else if(levelDecider > 5){
+			levelDecider = 0;
+		}
+		if( levelDecider  == 5 && posYDiff <= 150){
+			posYDiff++;
+		}
+		
+		
 		
 		moveBricks();
 		moveCharacterHorizontal();
@@ -300,22 +314,35 @@ public class GameMap {
 		bricks.add(b);
 		
 		///this part for the monster
-		int brickWhereMonsterPlaced = 0;
+		int monsterCount = 0;
+		
 		for( int i = 0; i < monsters.size(); i++){
 			if( monsters.get(i).getPosY() > HEIGHT){
-				boolean tryNext = true;
-				while( tryNext){
-					brickWhereMonsterPlaced = rand.nextInt(bricks.size());
-					if(  bricks.get(brickWhereMonsterPlaced).getName() == StandardBrick.STANDARD_BRICK_NAME 
-							&& ((StandardBrick)bricks.get(brickWhereMonsterPlaced)).getKind() == StandardBrick.Kind.STANDARD
-							&& bricks.get(brickWhereMonsterPlaced).getPosY() < 0 && bricks.get(brickWhereMonsterPlaced).isEmpty()){
-						tryNext = false;
-					}
-				}	
-					monsters.get(i).setPosX(bricks.get(brickWhereMonsterPlaced).getPosX() - monsterWidthDiff);
-					monsters.get(i).setPosY(bricks.get(brickWhereMonsterPlaced).getPosY() - monsterHeightDiff);
+				monsters.remove(i);
+				monsterCount++;
 			}
 		}
+		int brickWhereMonsterPlaced = 0;
+		for( int i = 0; i < bricks.size(); i++){
+			brickWhereMonsterPlaced = i;
+			if( monsterCount > 0){
+				if(  bricks.get(brickWhereMonsterPlaced).getName() == StandardBrick.STANDARD_BRICK_NAME 
+						&& ((StandardBrick)bricks.get(brickWhereMonsterPlaced)).getKind() == StandardBrick.Kind.STANDARD
+						&& bricks.get(brickWhereMonsterPlaced).getPosY() < 0 && bricks.get(brickWhereMonsterPlaced).isEmpty()){
+			
+					Monster monster = new Monster(monsterImage);
+					monster.setPosX(bricks.get(brickWhereMonsterPlaced).getPosX());// - monsterWidthDiff);
+					monster.setPosY(bricks.get(brickWhereMonsterPlaced).getPosY() - monsterHeightDiff*2/3);
+					monsters.add(monster);
+					System.out.println( "monster added");
+					monsterCount--;
+				}
+			}
+			else 
+				break;
+		}
+		
+		
 		//int widthBrick = bricks.get(0).getWidth();
 		for( Brick br : bricks){
 			if( br.getPosY() < 0 &&(br.getPosY() == bricks.get(brickWhereMonsterPlaced).getPosY() + posYDiff)){
