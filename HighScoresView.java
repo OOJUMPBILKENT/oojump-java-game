@@ -79,7 +79,7 @@ private JButton b;
 		repaint();
 	
 	}
-	public void updateHighScoresView(ArrayList<String[]> highScores){
+	public void updateHighScoresView(ArrayList<String[]> highScores){//@@@@@@@@@@@@@@@@@@@ArrayIndexOutOfBoundsException veriyor
 	
 		if(highScores.size()!=0){
 			for(int i= 0; i < highScores.size(); i++)

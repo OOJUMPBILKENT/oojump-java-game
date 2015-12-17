@@ -18,7 +18,7 @@ public class SoundManager {
 	private SoundManager()
 	{  
 		try{
-			File soundFile = new File("trampoline.wav");
+			File soundFile = new File("res/sounds/trampoline.wav");
 		    AudioInputStream sound = AudioSystem.getAudioInputStream(soundFile);
 
 		    // load the sound into memory (a Clip)

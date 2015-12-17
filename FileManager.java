@@ -49,8 +49,6 @@ public class FileManager {
                 highScores.add(temp);
                 
             }
-            sortArray(highScores);
-            System.out.println(highScores.get(0)[0]);
 
             bufferedReader.close();         
         }
@@ -73,6 +71,8 @@ public class FileManager {
 		newElement[1] = strScore;
 		highScores.add(newElement);
 		sortArray(highScores);
+			
+
 		
 	}
 	public ArrayList<String[]> sortArray(ArrayList<String[]> arr)
@@ -96,6 +96,8 @@ public class FileManager {
 				}
 			}
 		}
+		if(arr.size()>10)
+			arr.remove(10);
 		return arr;
 	}
 	
