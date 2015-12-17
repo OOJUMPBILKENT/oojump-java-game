@@ -72,9 +72,9 @@ public class GameMap {
 		doodlePropellerLeftImage = doodlePropellerLeftImage.getScaledInstance(100, 97, Image.SCALE_SMOOTH);
 		doodlePropellerRightImage = doodlePropellerRightImage.getScaledInstance(100, 97, Image.SCALE_SMOOTH);
 		
-		bricks = new ArrayList<Brick>();
-		bonuses = new ArrayList<Bonus>();
-		monsters = new ArrayList<Monster>();
+		//bricks = new ArrayList<Brick>();
+		//bonuses = new ArrayList<Bonus>();
+		//monsters = new ArrayList<Monster>();
 		
 		posYDiff = 80;
 		rand = new Random();
@@ -156,11 +156,14 @@ public class GameMap {
 			if(bricks.get(monsterBrick).getName() == StandardBrick.STANDARD_BRICK_NAME 
 						&& ((StandardBrick)bricks.get(monsterBrick)).getKind() == StandardBrick.Kind.STANDARD)
 				tryNext = false;
+			else
+				monsterBrick = 10 + rand.nextInt(5);
 		}
 		Monster monster = new Monster(monsterImage);
 		monster.setPos(bricks.get(monsterBrick).getPosX()- monsterWidthDiff, bricks.get(monsterBrick).getPosY()-monsterHeightDiff);
 		bricks.get(monsterBrick).setEmpty(false);
 		monsters.add(monster);
+	
 	}
 	public int determinePosX( int i){
 		boolean OK = false;
@@ -196,17 +199,17 @@ public class GameMap {
 		int springChooser = 90;
 		
 		int bonusChooser = 100;
-		int jetpackChooser = 20;
-		int propellerChooser = 80;
+		int jetpackChooser = 5;
+		int propellerChooser = 95;
 		
 		moveBricks();
 		moveCharacterHorizontal();
 		
-		int oldIndexBonus = -1;
+		
 		if( bonuses.size() > 0){
 			for( int i = 0; i < bonuses.size(); i++){
 				if( bonuses.get(i).getPosY() > HEIGHT){
-					oldIndexBonus = i;
+					bonuses.remove(i);
 				}
 				else if( bonuses.get(i).isRemove()){
 					bonuses.remove(i);
@@ -214,10 +217,10 @@ public class GameMap {
 			}
 		}
 		int minHeight = bricks.get(0).getPosY();
-		int oldIndex = -1;
+	
 		for( int i = 0; i < bricks.size(); i++){
 			if( bricks.get(i).getPosY() > HEIGHT){
-				oldIndex = i;
+				bricks.remove(i);
 			}
 			if( bricks.get(i).getPosY() < minHeight){
 				minHeight = bricks.get(i).getPosY();
@@ -226,82 +229,75 @@ public class GameMap {
 				bricks.remove(i);
 			}
 		}
-		if( oldIndex != -1){
-			Brick b;
-			int chooser = rand.nextInt(platformChooser);
-			minHeight = minHeight-posYDiff;
-			int widthBrick = bricks.get(0).getWidth();
-			
-			
-			if( chooser < springChooser){
-				b = new StandardBrick(greenBrickImage,  StandardBrick.Kind.STANDARD);
-				b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
-				chooser = rand.nextInt(bonusChooser);
-				if( chooser < jetpackChooser){
-					Bonus jet = new Jetpack(jetpackImage);
-					jet.setPos( b.getPosX() + widthBrick/2 - jet.getWidth()/2, b.getPosY()-jet.getHeight());
-					if( oldIndexBonus == -1){
-						bonuses.add(jet);
-					}
-					else{
-						bonuses.set(oldIndexBonus,jet);
-					}
-					b.setEmpty(false);
-				}
-				else if( chooser >propellerChooser){
-					Bonus propeller = new Propeller( propellerImage);
-					propeller.setPos(b.getPosX() + widthBrick/2 - propeller.getWidth()/2, b.getPosY() - propeller.getHeight());
-					if( oldIndexBonus == -1){
-						bonuses.add(propeller);
-					}
-					else{
-					bonuses.set(oldIndexBonus, propeller);
-					}
-					b.setEmpty(false);
-				}
-				else{
-					if( rand.nextInt(100) > 50){
-						Coin coin = new Coin(coinImage);
-						coin.setPos(b.getPosX() + b.getWidth()/2 - 15, b.getPosY()-30);
-						b.setEmpty(false);
-						if( oldIndexBonus == -1){
-							bonuses.add(coin);
-						}
-						else{
-						bonuses.set(oldIndexBonus, coin);
-						}
-					}
-				}
-				int brokenChooser = rand.nextInt(100);
-				if( b.isEmpty() && brokenChooser > 50){
-					b = new BrokenBrick(brokenBrickImage);
-					b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
-					b.setEmpty(false);
-				}
-			}
-			else if( chooser < trampolineChooser){
-				b = new StandardBrick(springBrickImage, StandardBrick.Kind.SPRING);
-				b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
-				b.setEmpty(false);
-			}
-			else if( chooser < movingBrickChooser){
-				if( rand.nextBoolean()){
-					b = new MovingBrick(movingBrickImage, MovingBrick.Direction.RIGHT);
-					b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
-				}
-				else{
-					b = new MovingBrick( movingBrickImage, MovingBrick.Direction.LEFT);
-					b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
-				}
+		
+		Brick b;
+		int chooser = rand.nextInt(platformChooser);
+		minHeight = minHeight-posYDiff;
+		int widthBrick = bricks.get(0).getWidth();
+		
+		
+		if( chooser < springChooser){
+			b = new StandardBrick(greenBrickImage,  StandardBrick.Kind.STANDARD);
+			b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
+			chooser = rand.nextInt(bonusChooser);
+			if( chooser < jetpackChooser){
+				Bonus jet = new Jetpack(jetpackImage);
+				jet.setPos( b.getPosX() + widthBrick/2 - jet.getWidth()/2, b.getPosY()-jet.getHeight());
+					
+				bonuses.add(jet);
 				
-			}	
+					
+				b.setEmpty(false);
+			}
+			else if( chooser >propellerChooser){
+				Bonus propeller = new Propeller( propellerImage);
+				propeller.setPos(b.getPosX() + widthBrick/2 - propeller.getWidth()/2, b.getPosY() - propeller.getHeight());
+					
+				
+				bonuses.add(propeller);
+			
+				b.setEmpty(false);
+			}
 			else{
-				b = new StandardBrick(trampolineBrickImage, StandardBrick.Kind.TRAMPOLINE);
+				if( rand.nextInt(100) > 80){
+					Coin coin = new Coin(coinImage);
+					coin.setPos(b.getPosX() + b.getWidth()/2 - 15, b.getPosY()-30);
+					b.setEmpty(false);
+					
+					bonuses.add(coin);
+					//bonuses.add(coin);
+					
+				}
+			}
+			int brokenChooser = rand.nextInt(100);
+			if( b.isEmpty() && brokenChooser > 50){
+				b = new BrokenBrick(brokenBrickImage);
 				b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
 				b.setEmpty(false);
 			}
-			bricks.set(oldIndex, b);
 		}
+		else if( chooser < trampolineChooser){
+			b = new StandardBrick(springBrickImage, StandardBrick.Kind.SPRING);
+			b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
+			b.setEmpty(false);
+		}
+		else if( chooser < movingBrickChooser){
+			if( rand.nextBoolean()){
+				b = new MovingBrick(movingBrickImage, MovingBrick.Direction.RIGHT);
+				b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
+			}
+			else{
+				b = new MovingBrick( movingBrickImage, MovingBrick.Direction.LEFT);
+				b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
+			}
+			
+		}	
+		else{
+			b = new StandardBrick(trampolineBrickImage, StandardBrick.Kind.TRAMPOLINE);
+			b.setPos(rand.nextInt(WIDTH-widthBrick), minHeight);
+			b.setEmpty(false);
+		}
+		bricks.add(b);
 		
 		///this part for the monster
 		int brickWhereMonsterPlaced = 0;
@@ -320,9 +316,9 @@ public class GameMap {
 					monsters.get(i).setPosY(bricks.get(brickWhereMonsterPlaced).getPosY() - monsterHeightDiff);
 			}
 		}
-		int widthBrick = bricks.get(0).getWidth();
-		for( Brick b : bricks){
-			if( b.getPosY() < 0 &&(b.getPosY() == bricks.get(brickWhereMonsterPlaced).getPosY() + posYDiff)){
+		//int widthBrick = bricks.get(0).getWidth();
+		for( Brick br : bricks){
+			if( br.getPosY() < 0 &&(br.getPosY() == bricks.get(brickWhereMonsterPlaced).getPosY() + posYDiff)){
 				boolean OK = false;
 				int posX = -1;
 				while(!OK){
@@ -331,7 +327,7 @@ public class GameMap {
 						OK = true;
 					}
 				}
-				b.setPosX(posX);		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ dene, çalýþmýyor olabilir
+				br.setPosX(posX);		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ dene, çalýþmýyor olabilir
 			}
 		
 		}
